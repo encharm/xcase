@@ -3,24 +3,6 @@ let assert = require('assert');
 let humps = require('./');
 let xcase = require('./');
 
-function camelizeKeys(obj) {
-  let obj2 = obj instanceof Array ? [] : {};
-  let keys = Object.keys(obj);
-  for(var key of keys) {
-    let value = obj[key];
-    key = xcase.camelize(key);  
-    if(value && typeof value == 'object') {
-      obj2[key] = camelizeKeys(value);
-    } else {
-      obj2[key] = value;
-    }
-    
-  }
-  return obj2;
-}
-
-humps.camelizeKeys = camelizeKeys;
-
 describe('passes humps tests', function() {
   'use strict';
   var actual;
@@ -274,5 +256,15 @@ describe('passes humps tests', function() {
     it('converts space-separated strings to PascalCase', function() {
       assert.equal(humps.pascalize('hello world'), 'HelloWorld');
     });
+  });
+});
+
+describe('passes own tests', function() {
+  it('leaves Date/Function untouched', function() {
+    let date = new Date();
+    let obj = humps.decamelizeKeys({
+      fooBar: date
+    });
+    assert.equal(obj.foo_bar, date);
   });
 });

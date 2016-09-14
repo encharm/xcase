@@ -1,6 +1,11 @@
 'use strict';
 let xcase = require('./build/Release/xcase');
 
+function shouldProcessValue(value) {
+  return value && typeof value == 'object' &&
+      !(value instanceof Date) && !(value instanceof Function);
+}
+
 function processKeys(obj, fun, opts) {
   let obj2;
   if(obj instanceof Array) {
@@ -15,7 +20,7 @@ function processKeys(obj, fun, opts) {
   for(let key in obj) {
     let value = obj[key];
     key = fun(key, opts);  
-    if(value && typeof value == 'object') {
+    if(shouldProcessValue(value)) {
       obj2[key] = processKeys(value, fun, opts);
     } else {
       obj2[key] = value;
@@ -31,7 +36,7 @@ function processKeysInPlace(obj, fun, opts) {
     if(newKey !== key) {
       delete obj[key];
     }
-    if(value && typeof value == 'object') {
+    if(shouldProcessValue(value)) {
       obj[newKey] = processKeys(value, fun, opts);
     } else {
       obj[newKey] = value;
