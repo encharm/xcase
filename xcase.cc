@@ -1,133 +1,12 @@
 #include <nan.h>
-#include <cctype>
 
-namespace xcase {
-  static inline bool isdigit(char16_t c) {
-    return c >= L'0' && c <= L'9';
-  }
-  static inline bool isupper(char16_t c) {
-    return c >= L'A' && c <= L'Z';
-  }
-  static inline bool islower(char16_t c) {
-    return c >= L'a' && c <= L'z';
-  }
-  static inline char16_t toupper(char16_t c) {
-    if(islower(c)) {
-      return c - (L'a' - L'A');
-    }
-    return c;
-  }
-  static inline char16_t tolower(char16_t c) {
-    if(isupper(c)) {
-      return c + (L'a' - L'A');
-    }
-    return c;
-  }
-}
+#include "algorithms.hpp"
 
-struct Camelize {
-  inline static bool Run(char16_t* str, size_t len, char16_t* out) {
-    uint j = 0;
-    bool changed = false;
-    if(xcase::isdigit(str[0]) || str[0] == L'-') {
-      return false;
-    }
-  
-    for(uint i = 0; i < len; ++i) {
-      auto c = str[i];
-      if(c == L'_' || c == L' ' || c == L'-') {
-        changed = true;
-        c = str[++i]; 
-        if(c == 0) {
-          return false;
-        }
-        out[j++] = xcase::toupper(c);
-      } else if(i == 0 && xcase::isupper(c)) {
-        changed = true;
-        out[j++] = xcase::tolower(c);
-      } else {
-        out[j++] = c;
-      }
-    }
-    out[j] = 0;
-    return changed;
-  }
-};
-
-struct Decamelize {
-  inline static bool Run(char16_t* str, size_t len, char16_t* out, char16_t separator = L'_') {
-    uint j = 0;
-    if(!xcase::islower(str[0])) {
-      return false;
-    }
-    bool changed = false;
-    for(uint i = 0; i < len; ++i) {
-      auto c = str[i];
-      if(xcase::isupper(c)) {
-        out[j++] = separator;
-        out[j++] = xcase::tolower(c);
-        changed = true;
-      } else {
-        out[j++] = c;
-      }
-    }
-    out[j] = 0;
-    return changed;
-  }
-};
-
-struct Pascalize {
-  inline static bool Run(char16_t* str, size_t len, char16_t* out) {
-    uint j = 0;
-    bool changed = false;
-    if(xcase::isdigit(str[0]) || str[0] == L'-') {
-      return false;
-    }
-    for(uint i = 0; i < len; ++i) {
-      auto c = str[i];
-      if(c == L'_' || c == L' ' || c == L'-') {
-        changed = true;
-        c = str[++i]; 
-        if(c == 0) {
-          return false;
-        }
-        out[j++] = xcase::toupper(c);
-      } else if(i == 0 && xcase::islower(c)) {
-        changed = true;
-        out[j++] = xcase::toupper(c);
-      } else {
-        out[j++] = c;
-      }
-    }
-    out[j] = 0;
-    return changed;
-  }
-};
-
-struct Depascalize {
-  inline static bool Run(char16_t* str, size_t len, char16_t* out, char16_t separator = L'_') {
-    uint j = 0;
-    
-    if(!xcase::isupper(str[0])) {
-      return false;
-    }
-    bool changed = false;
-    for(uint i = 0; i < len; ++i) {
-      auto c = str[i];
-      if(xcase::isupper(c)) {
-        if(i > 0) { 
-          out[j++] = separator;
-        }
-        out[j++] = xcase::tolower(c);
-        changed = true;
-      } else {
-        out[j++] = c;
-      }
-    }
-    out[j] = 0;
-    return changed;
-  }
-};
+using Camelize = typename Algorithms<uint16_t>::Camelize;
+using Decamelize = typename Algorithms<uint16_t>::Decamelize;
+using Pascalize = typename Algorithms<uint16_t>::Pascalize;
+using Depascalize = typename Algorithms<uint16_t>::Depascalize;
+using char_type = typename Algorithms<uint16_t>::char_type;
 
 template<class Algorithm>
 struct StringRunner {
@@ -138,12 +17,12 @@ public:
     if(len <= 1) {
       return str;
     }
-    char16_t buffer[len + 1];
-    char16_t newBuffer[len*2 + 1];
-    str->Write((uint16_t*)(buffer));
+    char_type buffer[len + 1];
+    char_type newBuffer[len*2 + 1];
+    str->Write(buffer);
     
     if(Algorithm::Run(buffer, len, newBuffer, args...)) {
-      return v8::String::NewFromTwoByte(v8::Isolate::GetCurrent(), (uint16_t*)newBuffer);
+      return Nan::New<v8::String>(newBuffer).ToLocalChecked();
     }
     return str;  
   }

@@ -1,6 +1,11 @@
 'use strict';
 let xcase = require('./build/Release/xcase');
 
+// let emtest = require('./emtest');
+// xcase.camelize = function(str) {
+//   return emtest.camelize(str);
+// }
+
 function shouldProcessValue(value) {
   return value && typeof value == 'object' &&
       !(value instanceof Date) && !(value instanceof Function);

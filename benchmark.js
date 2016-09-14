@@ -10,8 +10,6 @@ for(let i = 0;i < 10;++i) {
   object.array[i] = Object.assign({}, objectBare);
 }
 
-
-
 let suite = new Benchmark.Suite;
 
 let objectPool = [];
