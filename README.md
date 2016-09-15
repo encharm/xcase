@@ -1,6 +1,8 @@
 # xcase
 Blazingly fast recursive conversion to and from camelCase or PascalCase for Objects and Arrays.
 
+It supports both Node.js and Browser. Node.js has a slightly more performant native implementation.
+
 xcase passes most of https://github.com/domchristie/humps tests, excluding only those with custom regexps and handler functions. So if you use `humps` in Node and need something 4x faster then this is the right place.
 
 ```
@@ -11,7 +13,9 @@ humps#camelizeKeys x 166 ops/sec ±0.24% (84 runs sampled)
 ```
 
 ## Installation
-`npm install --save xcase`
+
+Node: `npm install --save xcase`
+Browser: `jspm install npm:xcase`
 
 ## Usage:
 
