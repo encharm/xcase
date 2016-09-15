@@ -37,14 +37,17 @@ initPool();
 let camelizedObject = xcase.camelizeKeys(object);
 
 (new Benchmark.Suite)
-.add('xcase#camelizeKeys', function() {
+.add('xcase#camelizeKeys [native]', function() {
   xcase.camelizeKeys(objectPool.pop());
 })
-.add('xcase#camelizeKeys {inPlace: true}', function() {
+.add('xcase#camelizeKeys {inPlace: true} [native]', function() {
   xcase.camelizeKeys(objectPool.pop(), {inPlace: true});
 })
-.add('xcaseJs#camelizeKeys', function() {
+.add('xcase#camelizeKeys [pure js]', function() {
   xcaseJs.camelizeKeys(objectPool.pop());
+})
+.add('xcase#camelizeKeys {inPlace: true} [pure js]', function() {
+  xcaseJs.camelizeKeys(objectPool.pop(), {inPlace: true});
 })
 .add('humps#camelizeKeys', function() {
   humps.camelizeKeys(objectPool.pop());

@@ -271,6 +271,9 @@ function makeTests(str, humps) {
         });
       });
     });
+    if(humps === require('humps')) {
+      return;
+    }
 
     describe('passes own tests', function() {
       it('leaves Date/Function untouched', function() {
@@ -280,6 +283,10 @@ function makeTests(str, humps) {
         });
         assert.equal(obj.foo_bar, date);
       });
+      
+      it('skips decamelize if first character is not lower case', function() {
+        assert.equal(humps.decamelize('AaaaBbbb'), 'AaaaBbbb');
+      })
     });
   });
 }

@@ -1,10 +1,10 @@
 {
   "name": "xcase",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Blazingly fast recursive convertion to and from camelCase or PascalCase for Objects and Arrays",
   "main": "indexNative",
   "scripts": {
-    "test": "npm test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -34,5 +34,8 @@
     "humps": "^1.1.0",
     "mocha": "^3.0.2",
     "uglify-js": "^2.7.3"
+  },
+  "jspm": {
+    "main": "index"
   }
 }
