@@ -158,15 +158,9 @@ static NAN_METHOD(DeXCaseMethod) {
     Nan::ThrowTypeError("Argument should be a String");
     return;
   }
-  if(info[1]->IsObject()) {
-    auto separatorKey = Nan::New("separator").ToLocalChecked();
-    auto options = info[1]->ToObject();
-    if(options->Has(separatorKey)) {
-      auto separatorString = info[1]->ToObject()->Get(Nan::New("separator").ToLocalChecked())->ToString();
-      if(separatorString->Length() > 1) {
-        Nan::ThrowTypeError("Separator should be a single character");
-        return;
-      }
+  if(info[1]->IsString()) {
+    auto separatorString = info[1].As<v8::String>();
+    if(separatorString->Length()) {
       separatorString->Write((uint16_t*)&separator, 0, 1, v8::String::NO_NULL_TERMINATION);
     }
   }
