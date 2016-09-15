@@ -287,6 +287,13 @@ function makeTests(str, humps) {
       it('skips decamelize if first character is not lower case', function() {
         assert.equal(humps.decamelize('AaaaBbbb'), 'AaaaBbbb');
       })
+      
+      it('keys methods should pass through strings',  function() {
+        assert.equal(humps.decamelizeKeys('AaaaBbbb'), 'AaaaBbbb');
+        assert.equal(humps.camelizeKeys('AaaaBbbb'), 'AaaaBbbb');
+        assert.equal(humps.pascalizeKeys('AaaaBbbb'), 'AaaaBbbb');
+        assert.equal(humps.depascalizeKeys('AaaaBbbb'), 'AaaaBbbb');
+      });
     });
   });
 }

@@ -59,21 +59,25 @@ module.exports = function(algorithms) {
     depascalize: depascalize,
     camelizeKeys(obj, opts) {
       opts = opts || {};
+      if(!shouldProcessValue(obj)) return obj;
       if(opts.inPlace) return processKeysInPlace(obj, algorithms.camelize, opts);
       return processKeys(obj, algorithms.camelize, opts);
     },
     decamelizeKeys(obj, opts) {
       opts = opts || {};
+      if(!shouldProcessValue(obj)) return obj;
       if(opts.inPlace) return processKeysInPlace(obj, decamelize, opts);
       return processKeys(obj, decamelize, opts);
     },
     pascalizeKeys(obj, opts) {
       opts = opts || {};
+      if(!shouldProcessValue(obj)) return obj;
       if(opts.inPlace) return processKeysInPlace(obj, algorithms.pascalize, opts);
       return processKeys(obj, algorithms.pascalize, opts);
     },
     depascalizeKeys(obj, opts) {
       opts = opts || {};
+      if(!shouldProcessValue(obj)) return obj;
       if(opts.inPlace) return processKeysInPlace(obj, depascalize, opts);
       return processKeys(obj, depascalize, opts);
     }

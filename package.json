@@ -1,6 +1,6 @@
 {
   "name": "xcase",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Blazingly fast recursive convertion to and from camelCase or PascalCase for Objects and Arrays",
   "main": "indexNative",
   "scripts": {
