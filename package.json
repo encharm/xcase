@@ -1,8 +1,8 @@
 {
   "name": "xcase",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Blazingly fast recursive convertion to and from camelCase or PascalCase for Objects and Arrays",
-  "main": "indexNative",
+  "main": "index",
   "scripts": {
     "test": "mocha",
     "build": "babel index.js main.js -d es5",
@@ -27,7 +27,6 @@
     "url": "https://github.com/encharm/xcase/issues"
   },
   "homepage": "https://github.com/encharm/xcase#readme",
-  "gypfile": true,
   "dependencies": {
     "nan": "^2.4.0"
   },
