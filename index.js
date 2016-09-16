@@ -33,10 +33,17 @@ algorithms.camelize = function(str) {
   if(isDigit(firstChar) || firstChar == 0x2d /* '-' */) {
     return str;
   }
-  let length = str.length;
-  let changed = false;
   let out = [];
-  for(let i = 0; i < length; ++i) {
+  let changed = false;
+  if(isUpper(firstChar)) {
+    changed = true;
+    out.push(toLower(firstChar));
+  } else {
+    out.push(firstChar);
+  }
+  
+  let length = str.length;
+  for(let i = 1; i < length; ++i) {
     let c = str.charCodeAt(i);
     if(c === 0x5f /* '_' */ || c === 0x20 /* ' ' */ || c == 0x2d /* '-' */ ) {
       changed = true;
@@ -45,9 +52,6 @@ algorithms.camelize = function(str) {
         return str;
       }
       out.push(toUpperSafe(c))
-    } else if(i === 0 && isUpper(c)) {
-      changed = true;
-      out.push(toLower(c));
     } else {
       out.push(c);
     }
