@@ -45,41 +45,39 @@ module.exports = function(algorithms) {
     return obj;
   }
 
-  function decamelize(str, opts) {
-    return algorithms.decamelize(str, (opts && opts.separator) || '');
-  }
-  function depascalize(str, opts) {
-    return algorithms.depascalize(str, (opts && opts.separator) || '');
-  }
-
-  return {
+  let iface = {
     camelize: algorithms.camelize,
-    decamelize: decamelize,
+    decamelize(str, opts) {
+      return algorithms.decamelize(str, (opts && opts.separator) || '');
+    },
     pascalize: algorithms.pascalize,
-    depascalize: depascalize,
+    depascalize(str, opts) {
+      return algorithms.depascalize(str, (opts && opts.separator) || '');
+    },
     camelizeKeys(obj, opts) {
       opts = opts || {};
       if(!shouldProcessValue(obj)) return obj;
-      if(opts.inPlace) return processKeysInPlace(obj, algorithms.camelize, opts);
-      return processKeys(obj, algorithms.camelize, opts);
+      if(opts.inPlace) return processKeysInPlace(obj, iface.camelize, opts);
+      return processKeys(obj, iface.camelize, opts);
     },
     decamelizeKeys(obj, opts) {
       opts = opts || {};
       if(!shouldProcessValue(obj)) return obj;
-      if(opts.inPlace) return processKeysInPlace(obj, decamelize, opts);
-      return processKeys(obj, decamelize, opts);
+      if(opts.inPlace) return processKeysInPlace(obj, iface.decamelize, opts);
+      return processKeys(obj, iface.decamelize, opts);
     },
     pascalizeKeys(obj, opts) {
       opts = opts || {};
       if(!shouldProcessValue(obj)) return obj;
-      if(opts.inPlace) return processKeysInPlace(obj, algorithms.pascalize, opts);
-      return processKeys(obj, algorithms.pascalize, opts);
+      if(opts.inPlace) return processKeysInPlace(obj, iface.pascalize, opts);
+      return processKeys(obj, iface.pascalize, opts);
     },
     depascalizeKeys(obj, opts) {
       opts = opts || {};
       if(!shouldProcessValue(obj)) return obj;
-      if(opts.inPlace) return processKeysInPlace(obj, depascalize, opts);
-      return processKeys(obj, depascalize, opts);
+      if(opts.inPlace) return processKeysInPlace(obj, iface.depascalize, opts);
+      return processKeys(obj, iface.depascalize, opts);
     }
   };
+  return iface;
 };
