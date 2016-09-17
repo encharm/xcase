@@ -65,7 +65,7 @@ let obj = camelizeKeys({
 
     change all keys according to `decamelize`
 
-* `pascalize(object, [opts])`
+* `pascalize(string, [opts])`
 
     change `"foo_bar"`/`"foo bar"`/`"foo-bar"` to `"FooBar"`
 
