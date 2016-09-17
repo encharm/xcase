@@ -1,15 +1,35 @@
 # xcase
-Blazingly fast recursive conversion to and from camelCase or PascalCase for Objects and Arrays.
+Blazingly fast recursive conversion to and from camelCase or PascalCase for objects and arrays and strings.
 
-It supports both Node.js and Browser. Node.js has a slightly more performant native implementation.
+It supports both Node.js and Browser.
 
-xcase passes most of https://github.com/domchristie/humps tests, excluding only those with custom regexps and handler functions. So if you use `humps` in Node and need something 4x faster then this is the right place.
+xcase passes most of https://github.com/domchristie/humps tests, excluding only those with custom regexps and handler functions. So if you use `humps` and need something much faster than this is the right place.
 
 ```
 > node benchmark.js
-xcase#camelizeKeys x 667 ops/sec ±1.06% (91 runs sampled)
-xcase#camelizeKeys {inPlace: true} x 594 ops/sec ±1.75% (83 runs sampled)
-humps#camelizeKeys x 166 ops/sec ±0.24% (84 runs sampled)
+xcase#camelize x 5,399,331 ops/sec ±1.36% (90 runs sampled)
+humps#camelize x 690,996 ops/sec ±1.48% (87 runs sampled)
+lodash#camelCase x 597,486 ops/sec ±0.96% (87 runs sampled)
+Fastest is xcase#camelize
+xcase#decamelize x 4,662,606 ops/sec ±0.72% (92 runs sampled)
+humps#decamelize x 1,293,234 ops/sec ±1.50% (85 runs sampled)
+lodash#snakeCase x 503,567 ops/sec ±1.69% (91 runs sampled)
+Fastest is xcase#decamelize
+xcase#camelizeKeys x 415,509 ops/sec ±1.41% (90 runs sampled)
+humps#camelizeKeys x 108,174 ops/sec ±0.89% (89 runs sampled)
+lodash#reduce + camelCase x 91,300 ops/sec ±0.59% (93 runs sampled)
+Fastest is xcase#camelizeKeys
+xcase#decamelizeKeys x 427,660 ops/sec ±1.05% (93 runs sampled)
+humps#decamelizeKeys x 161,917 ops/sec ±1.03% (91 runs sampled)
+lodash#reduce + snakeCase: 
+Fastest is xcase#decamelizeKeys
+xcase#camelizeKeys (large object) x 518 ops/sec ±1.77% (87 runs sampled)
+xcase#camelizeKeys {inPlace: true} (large object) x 447 ops/sec ±1.50% (77 runs sampled)
+humps#camelizeKeys (large object) x 134 ops/sec ±2.16% (75 runs sampled)
+Fastest is xcase#camelizeKeys (large object)
+xcase#decamelizeKeys (large object) x 508 ops/sec ±1.10% (86 runs sampled)
+humps#decamelizeKeys (large object) x 135 ops/sec ±19.79% (63 runs sampled)
+Fastest is xcase#decamelizeKeys (large object)
 ```
 
 ## Installation
