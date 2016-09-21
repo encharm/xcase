@@ -35,7 +35,12 @@ Fastest is xcase#decamelizeKeys (large object)
 ## Installation
 
 Node: `npm install --save xcase`
-Browser: `jspm install npm:xcase`
+
+Browser (JSPM): `jspm install npm:xcase`
+
+Browser (Bower): `jspm install xcase`
+
+Browser (Manual): Load https://raw.githubusercontent.com/encharm/xcase/master/dist/xcase.min.js and use global `xcase` object
 
 ## Usage:
 
