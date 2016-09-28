@@ -1,7 +1,7 @@
 'use strict';
 let Benchmark = require('benchmark');
 let humps = require('humps');
-let xcase = require('./');
+let xcase = require('./es5');
 let camelCase = require('lodash').camelCase;
 let reduce = require('lodash').reduce;
 
