@@ -31,78 +31,58 @@ module.exports = function (algorithms) {
   }
 
   function processKeysInPlace(obj, fun, opts) {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-      for (var _iterator = Object.keys(obj)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var key = _step.value;
-
-        var value = obj[key];
-        var newKey = fun(key, opts);
-        if (newKey !== key) {
-          delete obj[key];
-        }
-        if (shouldProcessValue(value)) {
-          obj[newKey] = processKeys(value, fun, opts);
-        } else {
-          obj[newKey] = value;
-        }
+    var keys = Object.keys(obj);
+    for (var idx = 0; idx < keys.length; ++idx) {
+      var key = keys[idx];
+      var value = obj[key];
+      var newKey = key;
+      fun(key, opts);
+      if (newKey !== key) {
+        delete obj[key];
       }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
+      if (shouldProcessValue(value)) {
+        obj[newKey] = processKeys(value, fun, opts);
+      } else {
+        obj[newKey] = value;
       }
     }
-
     return obj;
   }
 
-  function decamelize(str, opts) {
-    return algorithms.decamelize(str, opts && opts.separator || '');
-  }
-  function depascalize(str, opts) {
-    return algorithms.depascalize(str, opts && opts.separator || '');
-  }
-
-  return {
+  var iface = {
     camelize: algorithms.camelize,
-    decamelize: decamelize,
+    decamelize: function decamelize(str, opts) {
+      return algorithms.decamelize(str, opts && opts.separator || '');
+    },
+
     pascalize: algorithms.pascalize,
-    depascalize: depascalize,
+    depascalize: function depascalize(str, opts) {
+      return algorithms.depascalize(str, opts && opts.separator || '');
+    },
     camelizeKeys: function camelizeKeys(obj, opts) {
       opts = opts || {};
       if (!shouldProcessValue(obj)) return obj;
-      if (opts.inPlace) return processKeysInPlace(obj, algorithms.camelize, opts);
-      return processKeys(obj, algorithms.camelize, opts);
+      if (opts.inPlace) return processKeysInPlace(obj, iface.camelize, opts);
+      return processKeys(obj, iface.camelize, opts);
     },
     decamelizeKeys: function decamelizeKeys(obj, opts) {
       opts = opts || {};
       if (!shouldProcessValue(obj)) return obj;
-      if (opts.inPlace) return processKeysInPlace(obj, decamelize, opts);
-      return processKeys(obj, decamelize, opts);
+      if (opts.inPlace) return processKeysInPlace(obj, iface.decamelize, opts);
+      return processKeys(obj, iface.decamelize, opts);
     },
     pascalizeKeys: function pascalizeKeys(obj, opts) {
       opts = opts || {};
       if (!shouldProcessValue(obj)) return obj;
-      if (opts.inPlace) return processKeysInPlace(obj, algorithms.pascalize, opts);
-      return processKeys(obj, algorithms.pascalize, opts);
+      if (opts.inPlace) return processKeysInPlace(obj, iface.pascalize, opts);
+      return processKeys(obj, iface.pascalize, opts);
     },
     depascalizeKeys: function depascalizeKeys(obj, opts) {
       opts = opts || {};
       if (!shouldProcessValue(obj)) return obj;
-      if (opts.inPlace) return processKeysInPlace(obj, depascalize, opts);
-      return processKeys(obj, depascalize, opts);
+      if (opts.inPlace) return processKeysInPlace(obj, iface.depascalize, opts);
+      return processKeys(obj, iface.depascalize, opts);
     }
   };
+  return iface;
 };
