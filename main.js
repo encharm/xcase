@@ -34,8 +34,7 @@ module.exports = function(algorithms) {
     for(let idx = 0;idx < keys.length;++idx) {
       let key = keys[idx];
       let value = obj[key];
-      let newKey = key;
-      fun(key, opts);
+      let newKey = fun(key, opts);
       if(newKey !== key) {
         delete obj[key];
       }
