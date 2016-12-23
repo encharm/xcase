@@ -169,40 +169,21 @@ module.exports = function (algorithms) {
   }
 
   function processKeysInPlace(obj, fun, opts) {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-      for (var _iterator = Object.keys(obj)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var key = _step.value;
-
-        var value = obj[key];
-        var newKey = fun(key, opts);
-        if (newKey !== key) {
-          delete obj[key];
-        }
-        if (shouldProcessValue(value)) {
-          obj[newKey] = processKeys(value, fun, opts);
-        } else {
-          obj[newKey] = value;
-        }
+    var keys = Object.keys(obj);
+    for (var idx = 0; idx < keys.length; ++idx) {
+      var key = keys[idx];
+      var value = obj[key];
+      var newKey = key;
+      fun(key, opts);
+      if (newKey !== key) {
+        delete obj[key];
       }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
+      if (shouldProcessValue(value)) {
+        obj[newKey] = processKeys(value, fun, opts);
+      } else {
+        obj[newKey] = value;
       }
     }
-
     return obj;
   }
 

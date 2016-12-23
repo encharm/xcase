@@ -30,9 +30,12 @@ module.exports = function(algorithms) {
   }
 
   function processKeysInPlace(obj, fun, opts) {
-    for(let key of Object.keys(obj)) {
+    let keys = Object.keys(obj);
+    for(let idx = 0;idx < keys.length;++idx) {
+      let key = keys[idx];
       let value = obj[key];
-      let newKey = fun(key, opts);
+      let newKey = key;
+      fun(key, opts);
       if(newKey !== key) {
         delete obj[key];
       }
