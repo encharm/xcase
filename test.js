@@ -12,7 +12,6 @@ makeTests('xcase {inPlace: true}', Object.assign({}, xcase, {
   pascalizeKeys: (obj, opts) => xcase.pascalizeKeys(obj, Object.assign({inPlace: true}, opts)),
   depascalizeKeys: (obj, opts) => xcase.depascalizeKeys(obj, Object.assign({inPlace: true}, opts)),
 }));
-makeTests('humps', humps);
 
 function makeTests(str, humps) {
   describe(str, function() {
@@ -176,7 +175,7 @@ function makeTests(str, humps) {
         });
 
         it('decamelizes keys with a custom separator', function() {
-          actual = humps.decamelizeKeys(this.complexCamelObj, { separator: '-' });
+          actual = humps.decamelizeKeys(this.complexCamelObj, {separator: '-'});
           assert.deepEqual(actual, this.complexCustomObj);
         });
       });
@@ -213,7 +212,7 @@ function makeTests(str, humps) {
         });
 
         it('depascalizes keys with a custom separator', function() {
-          actual = humps.depascalizeKeys(this.complexPascalObj, { separator: '-' });
+          actual = humps.depascalizeKeys(this.complexPascalObj, {separator: '-'});
           assert.deepEqual(actual, this.complexCustomObj);
         });
       });
@@ -224,16 +223,16 @@ function makeTests(str, humps) {
         });
 
         it('converts hyphenated strings to camelcase', function() {
-          assert.equal(humps.camelize('hello-world'), 'helloWorld');
-          assert.equal(humps.camelize('hello-world-1'), 'helloWorld1');
+          assert.equal(humps.camelize('hello-world', '-'), 'helloWorld');
+          assert.equal(humps.camelize('hello-world-1', '-'), 'helloWorld1');
         });
 
         it('converts space-separated strings to camelcase', function() {
-          assert.equal(humps.camelize('hello world'), 'helloWorld');
+          assert.equal(humps.camelize('hello world', ' '), 'helloWorld');
         });
 
-        it('converts PascalCased strings to camelcase', function() {
-          assert.equal(humps.camelize('HelloWorld'), 'helloWorld');
+        it('skips converting PascalCased strings to camelcase since it is not reversible', function() {
+          assert.equal(humps.camelize('HelloWorld'), 'HelloWorld');
         });
 
         it('keeps numbers unchanged', function() {
@@ -248,7 +247,7 @@ function makeTests(str, humps) {
         });
 
         it('decamelizes strings with custom separator', function() {
-          actual = humps.decamelize('helloWorld', { separator: '-' });
+          actual = humps.decamelize('helloWorld', '-');
           assert.equal(actual, 'hello-world');
         });
 
@@ -263,11 +262,11 @@ function makeTests(str, humps) {
         });
 
         it('converts hyphenated strings to PascalCase', function() {
-          assert.equal(humps.pascalize('hello-world'), 'HelloWorld');
+          assert.equal(humps.pascalize('hello-world', '-'), 'HelloWorld');
         });
 
         it('converts space-separated strings to PascalCase', function() {
-          assert.equal(humps.pascalize('hello world'), 'HelloWorld');
+          assert.equal(humps.pascalize('hello world', ' '), 'HelloWorld');
         });
       });
     });

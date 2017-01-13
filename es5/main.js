@@ -20,7 +20,7 @@ module.exports = function (algorithms) {
     }
     for (var key in obj) {
       var value = obj[key];
-      if (typeof key === 'string') key = fun(key, opts);
+      if (typeof key === 'string') key = fun(key, opts && opts.separator);
       if (shouldProcessValue(value)) {
         obj2[key] = processKeys(value, fun, opts);
       } else {
@@ -35,7 +35,7 @@ module.exports = function (algorithms) {
     for (var idx = 0; idx < keys.length; ++idx) {
       var key = keys[idx];
       var value = obj[key];
-      var newKey = fun(key, opts);
+      var newKey = fun(key, opts && opts.separator);
       if (newKey !== key) {
         delete obj[key];
       }
@@ -49,14 +49,17 @@ module.exports = function (algorithms) {
   }
 
   var iface = {
-    camelize: algorithms.camelize,
-    decamelize: function decamelize(str, opts) {
-      return algorithms.decamelize(str, opts && opts.separator || '');
+    camelize: function camelize(str, separator) {
+      return algorithms.camelize(str, separator && separator.charCodeAt(0) || 0x5f /* _ */);
     },
-
-    pascalize: algorithms.pascalize,
-    depascalize: function depascalize(str, opts) {
-      return algorithms.depascalize(str, opts && opts.separator || '');
+    decamelize: function decamelize(str, separator) {
+      return algorithms.decamelize(str, separator && separator.charCodeAt(0) || 0x5f /* _ */);
+    },
+    pascalize: function pascalize(str, separator) {
+      return algorithms.pascalize(str, separator && separator.charCodeAt(0) || 0x5f /* _ */);
+    },
+    depascalize: function depascalize(str, separator) {
+      return algorithms.depascalize(str, separator && separator.charCodeAt(0) || 0x5f /* _ */);
     },
     camelizeKeys: function camelizeKeys(obj, opts) {
       opts = opts || {};

@@ -29,11 +29,11 @@ function toLower(char) {
   return char + 0x20;
 }
 
-algorithms.camelize = function (str) {
+algorithms.camelize = function (str, separator) {
   var firstChar = str.charCodeAt(0);
-  if (isDigit(firstChar) || firstChar == 0x2d /* '-' */) {
-      return str;
-    }
+  if (isDigit(firstChar) || isUpper(firstChar) || firstChar == separator) {
+    return str;
+  }
   var out = [];
   var changed = false;
   if (isUpper(firstChar)) {
@@ -46,14 +46,14 @@ algorithms.camelize = function (str) {
   var length = str.length;
   for (var i = 1; i < length; ++i) {
     var c = str.charCodeAt(i);
-    if (c === 0x5f /* '_' */ || c === 0x20 /* ' ' */ || c == 0x2d /* '-' */) {
-        changed = true;
-        c = str.charCodeAt(++i);
-        if (isNaN(c)) {
-          return str;
-        }
-        out.push(toUpperSafe(c));
-      } else {
+    if (c === separator) {
+      changed = true;
+      c = str.charCodeAt(++i);
+      if (isNaN(c)) {
+        return str;
+      }
+      out.push(toUpperSafe(c));
+    } else {
       out.push(c);
     }
   }
@@ -62,7 +62,6 @@ algorithms.camelize = function (str) {
 
 algorithms.decamelize = function (str, separator) {
   var firstChar = str.charCodeAt(0);
-  var separatorChar = (separator || '_').charCodeAt(0);
   if (!isLower(firstChar)) {
     return str;
   }
@@ -72,7 +71,7 @@ algorithms.decamelize = function (str, separator) {
   for (var i = 0; i < length; ++i) {
     var c = str.charCodeAt(i);
     if (isUpper(c)) {
-      out.push(separatorChar);
+      out.push(separator);
       out.push(toLower(c));
       changed = true;
     } else {
@@ -82,24 +81,24 @@ algorithms.decamelize = function (str, separator) {
   return changed ? String.fromCharCode.apply(undefined, out) : str;
 };
 
-algorithms.pascalize = function (str) {
+algorithms.pascalize = function (str, separator) {
   var firstChar = str.charCodeAt(0);
-  if (isDigit(firstChar) || firstChar == 0x2d /* '-' */) {
-      return str;
-    }
+  if (isDigit(firstChar) || firstChar == separator) {
+    return str;
+  }
   var length = str.length;
   var changed = false;
   var out = [];
   for (var i = 0; i < length; ++i) {
     var c = str.charCodeAt(i);
-    if (c === 0x5f /* '_' */ || c === 0x20 /* ' ' */ || c == 0x2d /* '-' */) {
-        changed = true;
-        c = str.charCodeAt(++i);
-        if (isNaN(c)) {
-          return str;
-        }
-        out.push(toUpperSafe(c));
-      } else if (i === 0 && isLower(c)) {
+    if (c === separator) {
+      changed = true;
+      c = str.charCodeAt(++i);
+      if (isNaN(c)) {
+        return str;
+      }
+      out.push(toUpperSafe(c));
+    } else if (i === 0 && isLower(c)) {
       changed = true;
       out.push(toUpper(c));
     } else {
@@ -111,7 +110,6 @@ algorithms.pascalize = function (str) {
 
 algorithms.depascalize = function (str, separator) {
   var firstChar = str.charCodeAt(0);
-  var separatorChar = (separator || '_').charCodeAt(0);
   if (!isUpper(firstChar)) {
     return str;
   }
@@ -122,7 +120,7 @@ algorithms.depascalize = function (str, separator) {
     var c = str.charCodeAt(i);
     if (isUpper(c)) {
       if (i > 0) {
-        out.push(separatorChar);
+        out.push(separator);
       }
       out.push(toLower(c));
       changed = true;

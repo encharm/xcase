@@ -28,9 +28,9 @@ function toLower(char) {
   return char + 0x20;
 }
 
-algorithms.camelize = function(str) {
+algorithms.camelize = function(str, separator) {
   let firstChar = str.charCodeAt(0);
-  if(isDigit(firstChar) || firstChar == 0x2d /* '-' */) {
+  if(isDigit(firstChar) || isUpper(firstChar) || firstChar == separator) {
     return str;
   }
   let out = [];
@@ -45,7 +45,7 @@ algorithms.camelize = function(str) {
   let length = str.length;
   for(let i = 1; i < length; ++i) {
     let c = str.charCodeAt(i);
-    if(c === 0x5f /* '_' */ || c === 0x20 /* ' ' */ || c == 0x2d /* '-' */ ) {
+    if(c === separator) {
       changed = true;
       c = str.charCodeAt(++i);
       if(isNaN(c)) {
@@ -61,7 +61,6 @@ algorithms.camelize = function(str) {
 
 algorithms.decamelize = function(str, separator) {
   let firstChar = str.charCodeAt(0);
-  let separatorChar = (separator || '_').charCodeAt(0);
   if(!isLower(firstChar)) {
     return str;
   }
@@ -71,7 +70,7 @@ algorithms.decamelize = function(str, separator) {
   for(let i = 0; i < length; ++i) {
     let c = str.charCodeAt(i);
     if(isUpper(c)) {
-      out.push(separatorChar);
+      out.push(separator);
       out.push(toLower(c));
       changed = true;
     } else {
@@ -81,9 +80,9 @@ algorithms.decamelize = function(str, separator) {
   return changed ? String.fromCharCode.apply(undefined, out) : str;
 }
 
-algorithms.pascalize = function(str) {
+algorithms.pascalize = function(str, separator) {
   let firstChar = str.charCodeAt(0);
-  if(isDigit(firstChar) || firstChar == 0x2d /* '-' */) {
+  if(isDigit(firstChar) || firstChar == separator) {
     return str;
   }
   let length = str.length;
@@ -91,7 +90,7 @@ algorithms.pascalize = function(str) {
   let out = [];
   for(let i = 0; i < length; ++i) {
     let c = str.charCodeAt(i);
-    if(c === 0x5f /* '_' */ || c === 0x20 /* ' ' */ || c == 0x2d /* '-' */ ) {
+    if(c === separator) {
       changed = true;
       c = str.charCodeAt(++i);
       if(isNaN(c)) {
@@ -110,7 +109,6 @@ algorithms.pascalize = function(str) {
 
 algorithms.depascalize = function(str, separator) {
   let firstChar = str.charCodeAt(0);
-  let separatorChar = (separator||'_').charCodeAt(0);
   if(!isUpper(firstChar)) {
     return str;
   }
@@ -121,7 +119,7 @@ algorithms.depascalize = function(str, separator) {
     let c = str.charCodeAt(i);
     if(isUpper(c)) {
       if(i > 0) {
-        out.push(separatorChar);
+        out.push(separator);
       }
       out.push(toLower(c));
       changed = true;
