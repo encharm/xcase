@@ -1,11 +1,9 @@
 'use strict';
 let assert = require('assert');
 let xcase = require('./');
-let xcaseJs = require('./index');
 let humps = require('humps');
 
 makeTests('xcase', xcase);
-makeTests('xcaseJs', xcaseJs);
 makeTests('xcase {inPlace: true}', Object.assign({}, xcase, {
   camelizeKeys: (obj, opts) => xcase.camelizeKeys(obj, Object.assign({inPlace: true}, opts)),
   decamelizeKeys: (obj, opts) => xcase.decamelizeKeys(obj, Object.assign({inPlace: true}, opts)),

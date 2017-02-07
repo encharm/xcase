@@ -1,11 +1,11 @@
 {
   "name": "xcase",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Blazingly fast recursive convertion to and from camelCase or PascalCase for Objects and Arrays",
   "main": "es5/index",
   "scripts": {
-    "test": "mocha",
-    "build": "babel index.js main.js -d es5 && browserify -s xcase -r ./es5/index.js -o dist/xcase.js && uglifyjs dist/xcase.js > dist/xcase.min.js",
+    "test": "npm run build && mocha",
+    "build": "rollup index.js -f es | babel --presets es2015 -o es5/index.js && browserify -s xcase -r ./es5/index.js -o dist/xcase.js && uglifyjs dist/xcase.js > dist/xcase.min.js",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -37,6 +37,7 @@
     "humps": "^1.1.0",
     "lodash": "^4.15.0",
     "mocha": "^3.0.2",
+    "rollup": "^0.41.4",
     "uglify-js": "^2.7.3"
   }
 }

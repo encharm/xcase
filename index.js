@@ -1,133 +1,94 @@
-'use strict';
-let algorithms = {};
 
-function isLower(char) {
-  return char >= 0x61 /* 'a' */ && char <= 0x7a /* 'z' */;
+
+function shouldProcessValue(value) {
+  return value && typeof value == 'object' &&
+      !(value instanceof Date) && !(value instanceof Function);
 }
 
-function isUpper(char) {
-  return char >= 0x41 /* 'A' */ && char <= 0x5a /* 'Z' */;
-}
-
-function isDigit(char) {
-  return char >= 0x30 /* '0' */ && char <= 0x39 /* '9' */;
-}
-
-function toUpper(char) {
-  return char - 0x20;
-}
-
-function toUpperSafe(char) {
-  if(isLower((char))) {
-    return char - 0x20;
-  }
-  return char;
-}
-
-function toLower(char) {
-  return char + 0x20;
-}
-
-algorithms.camelize = function(str, separator) {
-  let firstChar = str.charCodeAt(0);
-  if(isDigit(firstChar) || isUpper(firstChar) || firstChar == separator) {
-    return str;
-  }
-  let out = [];
-  let changed = false;
-  if(isUpper(firstChar)) {
-    changed = true;
-    out.push(toLower(firstChar));
+function processKeys(obj, fun, opts) {
+  let obj2;
+  if(obj instanceof Array) {
+    obj2 = [];
   } else {
-    out.push(firstChar);
+    if(typeof obj.prototype !== 'undefined') {
+      // return non-plain object unchanged
+      return obj;
+    }
+    obj2 = {};
   }
-  
-  let length = str.length;
-  for(let i = 1; i < length; ++i) {
-    let c = str.charCodeAt(i);
-    if(c === separator) {
-      changed = true;
-      c = str.charCodeAt(++i);
-      if(isNaN(c)) {
-        return str;
-      }
-      out.push(toUpperSafe(c))
+  for(let key in obj) {
+    let value = obj[key];
+    if(typeof key === 'string')
+      key = fun(key, opts && opts.separator);
+    if(shouldProcessValue(value)) {
+      obj2[key] = processKeys(value, fun, opts);
     } else {
-      out.push(c);
+      obj2[key] = value;
     }
   }
-  return changed ? String.fromCharCode.apply(undefined, out) : str;
-};
-
-algorithms.decamelize = function(str, separator) {
-  let firstChar = str.charCodeAt(0);
-  if(!isLower(firstChar)) {
-    return str;
-  }
-  let length = str.length;
-  let changed = false;
-  let out = [];
-  for(let i = 0; i < length; ++i) {
-    let c = str.charCodeAt(i);
-    if(isUpper(c)) {
-      out.push(separator);
-      out.push(toLower(c));
-      changed = true;
-    } else {
-      out.push(c);
-    }
-  }
-  return changed ? String.fromCharCode.apply(undefined, out) : str;
+  return obj2;
 }
 
-algorithms.pascalize = function(str, separator) {
-  let firstChar = str.charCodeAt(0);
-  if(isDigit(firstChar) || firstChar == separator) {
-    return str;
-  }
-  let length = str.length;
-  let changed = false;
-  let out = [];
-  for(let i = 0; i < length; ++i) {
-    let c = str.charCodeAt(i);
-    if(c === separator) {
-      changed = true;
-      c = str.charCodeAt(++i);
-      if(isNaN(c)) {
-        return str;
-      }
-      out.push(toUpperSafe(c))
-    } else if(i === 0 && isLower(c)) {
-      changed = true;
-      out.push(toUpper(c));
+function processKeysInPlace(obj, fun, opts) {
+  let keys = Object.keys(obj);
+  for(let idx = 0;idx < keys.length;++idx) {
+    let key = keys[idx];
+    let value = obj[key];
+    let newKey = fun(key, opts && opts.separator);
+    if(newKey !== key) {
+      delete obj[key];
+    }
+    if(shouldProcessValue(value)) {
+      obj[newKey] = processKeys(value, fun, opts);
     } else {
-      out.push(c);
+      obj[newKey] = value;
     }
   }
-  return changed ? String.fromCharCode.apply(undefined, out) : str;
-};
-
-algorithms.depascalize = function(str, separator) {
-  let firstChar = str.charCodeAt(0);
-  if(!isUpper(firstChar)) {
-    return str;
-  }
-  let length = str.length;
-  let changed = false;
-  let out = [];
-  for(let i = 0; i < length; ++i) {
-    let c = str.charCodeAt(i);
-    if(isUpper(c)) {
-      if(i > 0) {
-        out.push(separator);
-      }
-      out.push(toLower(c));
-      changed = true;
-    } else {
-      out.push(c);
-    }
-  }
-  return changed ? String.fromCharCode.apply(undefined, out) : str;
+  return obj;
 }
 
-module.exports = require('./main')(algorithms);
+import * as algorithms from './algorithms';
+
+export function camelize(str, separator) {
+  return algorithms.camelize(str, (separator && separator.charCodeAt(0)) || 0x5f /* _ */);
+}
+
+export function decamelize(str, separator) {
+  return algorithms.decamelize(str, (separator && separator.charCodeAt(0)) || 0x5f /* _ */);
+}
+
+export function pascalize(str, separator) {
+  return algorithms.pascalize(str, (separator && separator.charCodeAt(0)) || 0x5f /* _ */);
+}
+
+export function depascalize(str, separator) {
+  return algorithms.depascalize(str, (separator && separator.charCodeAt(0)) || 0x5f /* _ */);
+}
+
+export function camelizeKeys(obj, opts) {
+  opts = opts || {};
+  if(!shouldProcessValue(obj)) return obj;
+  if(opts.inPlace) return processKeysInPlace(obj, camelize, opts);
+  return processKeys(obj, camelize, opts);
+}
+
+export function decamelizeKeys(obj, opts) {
+  opts = opts || {};
+  if(!shouldProcessValue(obj)) return obj;
+  if(opts.inPlace) return processKeysInPlace(obj, decamelize, opts);
+  return processKeys(obj, decamelize, opts);
+}
+
+export function pascalizeKeys(obj, opts) {
+  opts = opts || {};
+  if(!shouldProcessValue(obj)) return obj;
+  if(opts.inPlace) return processKeysInPlace(obj, pascalize, opts);
+  return processKeys(obj, pascalize, opts);
+}
+
+export function depascalizeKeys(obj, opts) {
+  opts = opts || {};
+  if(!shouldProcessValue(obj)) return obj;
+  if(opts.inPlace) return processKeysInPlace(obj, depascalize, opts);
+  return processKeys(obj, depascalize, opts);
+}
