@@ -1,6 +1,11 @@
+cache:
+  mount:
+    - node_modules
+
 pipeline:
   build:
     image: node:6
     commands:
       - npm install
       - npm test
+      - node benchmark.js
