@@ -5,7 +5,3 @@ pipeline:
       - npm install
       - npm test
       - node benchmark.js
-
-cache:
-  mount:
-    - node_modules
