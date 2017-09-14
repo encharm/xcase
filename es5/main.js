@@ -4,7 +4,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 module.exports = function (algorithms) {
   function shouldProcessValue(value) {
-    return value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) == 'object' && !(value instanceof Date) && !(value instanceof Function);
+    return value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) == 'object' && !(value instanceof Date) && !(value instanceof Function) && !(value instanceof File);
   }
 
   function processKeys(obj, fun, opts) {
