@@ -1,5 +1,6 @@
 pipeline:
-  image: "node:6"
-  commands:
-    - npm install
-    - npm test
+  build:
+    image: node:6
+    commands:
+      - npm install
+      - npm test
