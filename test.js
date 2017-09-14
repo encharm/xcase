@@ -222,7 +222,7 @@ function makeTests(str, humps) {
 
         it('converts hyphenated strings to camelcase', function() {
           assert.equal(humps.camelize('hello-world', '-'), 'helloWorld');
-          assert.equal(humps.camelize('hello-world-1', '-'), 'helloWorld1');
+          assert.equal(humps.camelize('hello-world-1', '-'), 'helloWorld12');
         });
 
         it('converts space-separated strings to camelcase', function() {
